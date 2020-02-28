@@ -2,7 +2,7 @@
 # anaconda-tf2
 Small framework to train cnn models using tensorflow 2.0 and anaconda on OSCAR
 
-## It is recommended to check out the Oscar user manual at [https://docs.ccv.brown.edu/oscar/](https://docs.ccv.brown.edu/oscar/)
+## It is recommended to read the Oscar user manual at [https://docs.ccv.brown.edu/oscar/](https://docs.ccv.brown.edu/oscar/)
 
 ## Setting up anaconda
 
