@@ -4,12 +4,30 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
+import os, sys
+def splitall(path):
+    allparts = []
+    while 1:
+        parts = os.path.split(path)
+        if parts[0] == path:  # sentinel for absolute paths
+            allparts.insert(0, parts[0])
+            break
+        elif parts[1] == path: # sentinel for relative paths
+            allparts.insert(0, parts[1])
+            break
+        else:
+            path = parts[0]
+            allparts.insert(0, parts[1])
+    return allparts
+
 class datagenerator:    
     def __init__(self, model):
-        
+
         # Import Data from the csv
-        labels = []
-        images = []
+        train_filenames = []
+        self.test_filenames = []
+        train_labels = []
+        self.test_labels = []
 
         #read csv file
         with open(model.path + 'descriptor.txt') as csv_file:
@@ -17,12 +35,18 @@ class datagenerator:
             line_count = 0
             for row in csv_reader:
                 #skip CNT for now
-                if row[1] != 'CNT':
-                    images.append(model.path + model.subfolder + model.channel+ row[0] + model.ending) 
-                    labels.append(row[1])
+                dataset_folder = splitall(row[2])
+                if row[1] in  model.conditions:
+                    if dataset_folder[len(dataset_folder) - 2] in model.trainingsets:
+                        train_filenames.append(model.path + model.subfolder + model.channel+ row[0] + model.ending) 
+                        train_labels.append(row[1])
+                    elif dataset_folder[len(dataset_folder) - 2] in model.testsets:
+                        self.test_filenames.append(model.path + model.subfolder + model.channel+ row[0] + model.ending) 
+                        self.test_labels.append(row[1])
 
         #split in train and test data
-        train_filenames, self.test_filenames, train_labels, self.test_labels = train_test_split(images, labels,train_size = model.trainsize,random_state=42)
+        if not model.testsets:
+            train_filenames, self.test_filenames, train_labels, self.test_labels = train_test_split(train_filenames, train_labels,train_size = 1.0 - model.testsize,random_state=42)
 
         #create panda dataFrame for traindata
         d_train= {'filename': train_filenames, 'class': train_labels}
@@ -77,7 +101,7 @@ class datagenerator:
                 shuffle=True,
                 color_mode = 'grayscale' if model.nbchannels == 1 else 'rgb' )
 
-        
+
         #create Image generator
         datagen_test = ImageDataGenerator(
                 rescale=model.rescale)  # set values to 0-1

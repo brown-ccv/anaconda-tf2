@@ -8,7 +8,7 @@ class cnnmodel_impl():
             
         #INPUT
         #path to the main data folder
-        self.path = 'D:\\work\\48h_output\\'
+        self.path = 'E:\\alysha\\72h_output\\'
         #subfolder for the data, e.g. 'max/' or 'mean/'
         self.subfolder = 'max/'
         #folder for the channel eg, "ch3/" or empty '' for rgb
@@ -21,11 +21,17 @@ class cnnmodel_impl():
         self.nbchannels = 3
 
         #TEST - TRAIN - VALIDATIONSPLIT
-        #Percentage of images for a train set, leftover is used as test dataset
-        self.trainsize = 0.9; 
+        #The conditions to be tested
+        self.conditions = ["CNT","UT"]
+        #Name of datasets used for training
+        self.trainingsets = ["20.01.17TricultureCNT", "20.01.17TricultureUT", "2019.10.01TricultureM10b", "2019.10.07TricultureM1b"]
         #Percentage of images for a validation set, leftover is used as training dataset
         self.validationsplit = 0.3
-        
+        #Name of datasets used for testing
+        self.testsets = ["2019.10.11TricultureM3b_allwells"] 
+        #ONLY USED IF TESTSETS IS EMPTY :  Percentage of images taken from training set for tesing
+        self.testsize = 0.1; 
+
         #IMAGEGENERATOR - should not need adjustement but might be nice for other projects
         #scaling should be set to bring values in the range of 0-1
         self.rescale=1./255  # set values to 0-1
